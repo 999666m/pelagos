@@ -18,15 +18,15 @@
 <p align="center">
   <a href="https://github.com/quantum-supercomputing/pelagos/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/quantum-supercomputing/pelagos/actions/workflows/ci.yml/badge.svg?branch=main"></a>
   <a href="LICENSE"><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-Apache_2.0-blue.svg"></a>
-  <img alt="Python 3.11 | 3.12 | 3.13" src="https://img.shields.io/badge/python-3.11_|_3.12_|_3.13-3776AB?logo=python&logoColor=white>
+  <img alt="Python 3.11 | 3.12 | 3.13" src="https://img.shields.io/badge/python-3.11_|_3.12_|_3.13-3776AB?logo=python&logoColor=white">
   <a href="https://ieeexplore.ieee.org/document/11662198"><img alt="Paper: IEEE QSW 2026" src="https://img.shields.io/badge/paper-IEEE_QSW_2026-00629B?logo=ieee&logoColor=white"></a>
 </p>
 
 <p align="center">
   <a href="https://github.com/triton-lang/triton"><img alt="Triton" src="https://img.shields.io/badge/kernels-Triton-6E4AFF"></a>
   <a href="https://pytorch.org"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white"></a>
-  <img alt="AMD ROCm" src="https://img.shields.io/badge/AMD-ROCm-ED1C24?logo=amd&logoColor=white>
-  <img alt="NVIDIA CUDA" src="https://img.shields.io/badge/NVIDIA-CUDA-76B900?logo=nvidia&logoColor=white>
+  <img alt="AMD ROCm" src="https://img.shields.io/badge/AMD-ROCm-ED1C24?logo=amd&logoColor=white">
+  <img alt="NVIDIA CUDA" src="https://img.shields.io/badge/NVIDIA-CUDA-76B900?logo=nvidia&logoColor=white">
   <a href="https://github.com/quantumlib/Stim"><img alt="stim" src="https://img.shields.io/badge/noise_models-stim-4285F4"></a>
   <a href="tutorials/"><img alt="Tutorials: Jupyter" src="https://img.shields.io/badge/tutorials-Jupyter-F37626?logo=jupyter&logoColor=white"></a>
 </p>
@@ -39,7 +39,7 @@ against) the `relay-bp` Rust reference implementation, available on PyPI.
 ## Hardware support
 
 Pelagos is vendor-neutral: the kernels are written in Triton, which targets
-both NVIDIA (CUDA), AMD (ROCm/HIP), and Intel (SPIR-V) GPUs. The decoder 
+both NVIDIA (CUDA), AMD (ROCm/HIP) and Intel (SPIR-V) GPUs. The decoder 
 detects the active backend at construction time and adapts launch parameters 
 accordingly.
 
@@ -105,10 +105,10 @@ Three details that are easy to get wrong (all enforced by
 - `algo` must be passed explicitly — `algo="relay"` or `algo="plain"`.
   Omitting it raises `ValueError: Unknown algo 'None'`.
 - `decode()` requires a torch tensor already on the GPU
-  (`torch.from_numpy(...).to("cuda:0")` — PyTorch uses the `"cuda" device
+  (`torch.from_numpy(...).to("cuda:0")` — PyTorch uses the `"cuda"` device
   type for ROCm builds as well, so the same call works on AMD),
   not a numpy array.
-The result dict's error-pattern key is `"errors"`, not `"e_hat"`.
+- The result dict's error-pattern key is `"errors"`, not `"e_hat"`.
 
 ### From a stim detector error model
 
@@ -126,7 +126,7 @@ cm = CheckMatrices.from_dem(dem)
 decoder = RelayBPDecoder(H_csr=cm.check_matrix, error_priors=cm.error_priors, algo="relay")
 ```
 
-Note that the field is `cm.error_priors`, not `cm.priors`. This path requires
+Note the field is `cm.error_priors`, not `cm.priors`. This path requires
 the `stim` extra (`pip install pelagos-decoder[stim]`), which pulls in
 `beliefmatching`.
 
@@ -161,10 +161,10 @@ pip install "pelagos-decoder[gpu,bench]"     # or: uv sync --extra gpu --extra b
 ```bash
 python pelagos_benchmark.py --backend triton \
     --circuit bicycle_bivariate_144_12_12_memory_X --basis x \
-    - distance 12 --rounds 12 --error-rate 0.003 --data-type float32
+    --distance 12 --rounds 12 --error-rate 0.003 --data-type float32
 ```
 
-There is no single `--compare-rust` flag to cross-check against the Rust
+There is no single `--compare-rust` flag; to cross-check against the Rust
 reference, run the same command twice with `--backend rust` and
 `--backend triton` (the `rust` extra must be installed for the former).
 
@@ -190,7 +190,7 @@ dem = circuit.detector_error_model(decompose_errors=False)
 
 ## Testing
 
-Continuous integration runs on GitHub-hosted runners, which have no GPU**. On every pull
+Continuous integration runs on GitHub-hosted runners, which have **no GPU**. On every pull
 request, CI checks packaging, imports, lint (syntax errors and undefined names), the
 CPU-side code (input validation, bit packing, the conversion from a stim DEM to check
 matrices) and the well-formedness of the tutorial notebooks. The decoder tests, including
